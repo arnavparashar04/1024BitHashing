@@ -1,3 +1,1 @@
-# 512BitHashing
-
-Tried to be as quantum resistant as possible
+# 1024 Bit Hashing
