@@ -6,11 +6,13 @@
 #include <cmath>
 #include <cstdint>
 using namespace std;
-const int HASH_LENGTH = 64;
+
+const int HASH_LENGTH = 1024;
 const uint64_t PRIME1 = 11400714785074694791ULL;
 const uint64_t PRIME2 = 14029467366897019727ULL;
-const int MEMORY_HARDNESS = 1024 * 1024;
-uint64_t generateFixedSalt(const string &password, const string &username)
+const int MEMORY_HARDNESS = 1024 * 1024 * 5;
+
+uint64_t Salt(const string &password, const string &username)
 {
     uint64_t salt = PRIME1;
     for (char c : (password + username))
@@ -21,15 +23,16 @@ uint64_t generateFixedSalt(const string &password, const string &username)
     return salt;
 }
 
-vector<uint64_t> passwordToLattice(const string &password, uint64_t salt)
+vector<uint64_t> Lattice(const string &password, uint64_t salt)
 {
-    vector<uint64_t> poly(HASH_LENGTH / 8);
+    vector<uint64_t> poly(HASH_LENGTH / 64);
     for (size_t i = 0; i < password.size(); i++)
     {
         poly[i % poly.size()] ^= (static_cast<uint64_t>(password[i]) + salt) * PRIME1;
     }
     return poly;
 }
+
 void memoryHardening(vector<uint64_t> &poly, uint64_t salt)
 {
     vector<uint64_t> memory(MEMORY_HARDNESS / 8, 0);
@@ -43,6 +46,7 @@ void memoryHardening(vector<uint64_t> &poly, uint64_t salt)
         poly[i] ^= memory[(i * PRIME1) % memory.size()];
     }
 }
+
 void bitwiseMixing(vector<uint64_t> &poly)
 {
     for (size_t i = 0; i < poly.size(); i++)
@@ -64,10 +68,10 @@ string generateHash(const vector<uint64_t> &poly)
     return hashStream.str();
 }
 
-string quantumResistantHash(const string &password, const string &username)
+string Hash(const string &password, const string &username)
 {
-    uint64_t salt = generateFixedSalt(password, username);
-    vector<uint64_t> poly = passwordToLattice(password, salt);
+    uint64_t salt = Salt(password, username);
+    vector<uint64_t> poly = Lattice(password, salt);
     memoryHardening(poly, salt);
     bitwiseMixing(poly);
     return generateHash(poly);
@@ -81,8 +85,8 @@ int main()
     cout << "Enter password: ";
     cin >> password;
 
-    string hash = quantumResistantHash(password, username);
-    cout << "Quantum-Safe 512-bit Hash: " << hash << endl;
+    string hash = Hash(password, username);
+    cout << hash << endl;
 
     return 0;
 }
