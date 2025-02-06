@@ -19,6 +19,8 @@ uint64_t Salt(const string &password, const string &username)
     {
         salt ^= static_cast<uint64_t>(c) * PRIME2;
         salt = (salt << 7) | (salt >> (64 - 7));
+        salt *= PRIME1;
+        salt ^= (salt >> 17) | (salt << (64 - 17));
     }
     return salt;
 }
