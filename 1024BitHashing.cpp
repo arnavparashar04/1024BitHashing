@@ -6,21 +6,19 @@
 #include <cmath>
 #include <cstdint>
 using namespace std;
-
 const int HASH_LENGTH = 1024;
 const uint64_t PRIME1 = 11400714785074694791ULL;
 const uint64_t PRIME2 = 14029467366897019727ULL;
 const int MEMORY_HARDNESS = 1024 * 1024 * 5;
-
 uint64_t Salt(const string &password, const string &username)
 {
     uint64_t salt = PRIME1;
     for (char c : (password + username))
     {
-        salt ^= static_cast<uint64_t>(c) * PRIME2;
-        salt = (salt << 7) | (salt >> (64 - 7));
+        salt ^= static_cast<uint64_t>(c) * PRIME2;                
+        salt = (salt << 7) | (salt >> (64 - 7));           //shifting
         salt *= PRIME1;
-        salt ^= (salt >> 17) | (salt << (64 - 17));
+        salt ^= (salt >> 17) | (salt << (64 - 17));  // more mixing
     }
     return salt;
 }
@@ -30,7 +28,7 @@ vector<uint64_t> Lattice(const string &password, uint64_t salt)
     vector<uint64_t> poly(HASH_LENGTH / 64);
     for (size_t i = 0; i < password.size(); i++)
     {
-        poly[i % poly.size()] ^= (static_cast<uint64_t>(password[i]) + salt) * PRIME1;
+        poly[i % poly.size()] ^= (static_cast<uint64_t>(password[i]) + salt) * PRIME1; 
     }
     return poly;
 }
@@ -70,7 +68,7 @@ string generateHash(const vector<uint64_t> &poly)
     hashStream.fill('0');
     for (size_t i = 0; i < poly.size(); i++)
     {
-        hashStream << hex << setw(16) << poly[i];
+        hashStream << hex << setw(16) << poly[i]; //setw to ignore after 16, 0s if less
     }
     return hashStream.str();
 }
