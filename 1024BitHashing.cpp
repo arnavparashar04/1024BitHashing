@@ -42,11 +42,16 @@ void memoryHardening(vector<uint64_t> &poly, uint64_t salt)
     {
         memory[i] = (poly[i % poly.size()] + salt) ^ PRIME2;
         memory[i] = (memory[i] << 13) | (memory[i] >> (64 - 13));
+        
     }
-    for (size_t i = 0; i < poly.size(); i++)
-    {
-        poly[i] ^= memory[(i * PRIME1) % memory.size()];
+    for (size_t round = 0; round < 5; round++) { 
+        for (size_t i = 0; i < poly.size(); i++) {
+            poly[i] ^= memory[i % memory.size()];
+            poly[i] *= PRIME1;
+            poly[i] ^= (poly[i] << 19) | (poly[i] >> (64 - 19));
+        }
     }
+    
 }
 
 void bitwiseMixing(vector<uint64_t> &poly)
