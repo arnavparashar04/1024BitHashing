@@ -18,7 +18,7 @@ uint64_t Salt(const string &password, const string &username)
     for (char c : (password + username))
     {
         salt ^= static_cast<uint64_t>(c) * PRIME2;
-        salt = (salt << 7) | (salt >> 57);
+        salt = (salt << 7) | (salt >> (64 - 7));
     }
     return salt;
 }
@@ -39,7 +39,7 @@ void memoryHardening(vector<uint64_t> &poly, uint64_t salt)
     for (size_t i = 0; i < MEMORY_HARDNESS / 8; i++)
     {
         memory[i] = (poly[i % poly.size()] + salt) ^ PRIME2;
-        memory[i] = (memory[i] << 13) | (memory[i] >> 51);
+        memory[i] = (memory[i] << 13) | (memory[i] >> (64 - 13));
     }
     for (size_t i = 0; i < poly.size(); i++)
     {
@@ -51,9 +51,9 @@ void bitwiseMixing(vector<uint64_t> &poly)
 {
     for (size_t i = 0; i < poly.size(); i++)
     {
-        poly[i] ^= (poly[i] << 31) | (poly[i] >> 33);
+        poly[i] ^= (poly[i] << 31) | (poly[i] >> (64 - 31) );
         poly[i] *= PRIME1;
-        poly[i] ^= (poly[i] << 17) | (poly[i] >> 47);
+        poly[i] ^= (poly[i] << 17) | (poly[i] >> (64 - 17) );
     }
 }
 
