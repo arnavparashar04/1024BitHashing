@@ -7,8 +7,9 @@
 #include <cstdint>
 using namespace std;
 const int HASH_LENGTH = 1024;
-const uint64_t PRIME1 = 11400714785074694791ULL;
-const uint64_t PRIME2 = 14029467366897019727ULL;
+const uint64_t PRIME1 = 11400714785074694791ULL; // 2 random large primes
+const uint64_t PRIME2 = 14029467366897019727ULL; // ull for unsigned long long
+const uint64_t PRIME3 = 10092003300140014003ULL; // might use this later
 const int MEMORY_HARDNESS = 1024 * 1024 * 5;
 uint64_t Salt(const string &password, const string &username)
 {
