@@ -62,6 +62,18 @@ void bitwiseMixing(vector<uint64_t> &poly)
         poly[i] ^= (poly[i] << 17) | (poly[i] >> (64 - 17) );
     }
 }
+void neighborBasedTransformation(vector<uint64_t> &poly)
+{
+    size_t n = poly.size();
+    for (size_t i = 0; i < n; i++)
+    {
+        uint64_t left = poly[(i + n - 1) % n];
+        uint64_t right = poly[(i + 1) % n];
+        poly[i] ^= (left >> 3) ^ (right << 5);
+        poly[i] *= PRIME2;
+        poly[i] ^= (poly[i] << 11) | (poly[i] >> (64 - 11));
+    }
+}
 
 string generateHash(const vector<uint64_t> &poly)
 {
@@ -79,6 +91,7 @@ string Hash(const string &password, const string &username)
     uint64_t salt = Salt(password, username);
     vector<uint64_t> poly = Lattice(password, salt);
     memoryHardening(poly, salt);
+    neighborBasedTransformation(poly);
     bitwiseMixing(poly);
     return generateHash(poly);
 }
