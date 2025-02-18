@@ -9,7 +9,9 @@ This algorithm offers a level of quantum resistance by incorporating several des
 
 # Premature hash analysis using OpenAI 4o Advanced Data Analysis Model
 
-Report on Hash Entropy and Randomness Analysis
+Report on Hash Entropy and Collision Analysis
+
+Dataset Size : 10000
 
 ## Introduction:
 This report provides an analysis of the entropy andpotential collisions in a given set of password hashes. 
