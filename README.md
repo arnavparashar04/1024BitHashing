@@ -16,11 +16,11 @@ Dataset Size : 10000
 ## Introduction:
 This report provides an analysis of the entropy andpotential collisions in a given set of password hashes. 
 
-## Entropy Analysis:
+## Shanon's Entropy Analysis:
 
-Entropy of Provided Hashes: 3.96 bits per hex character
+Shanon Entropy of Provided Hashes: 3.96 bits per hex character
 
-Entropy of SHA-256 Hashes (Random Inputs): 3.92 bits per hex character
+Shanon Entropy of SHA-256 Hashes (Random Inputs): 3.92 bits per hex character
 
 
 ## Collision Detection:
