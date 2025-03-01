@@ -7,8 +7,9 @@
 #include <cstdint>
 using namespace std;
 const int HASH_LENGTH = 1024;
-const uint64_t PRIME1 = 11400714785074694791ULL;
-const uint64_t PRIME2 = 14029467366897019727ULL;
+const uint64_t PRIME1 = 11400714785074694791ULL; // 2 random large primes
+const uint64_t PRIME2 = 14029467366897019727ULL; // ull for unsigned long long
+const uint64_t PRIME3 = 10092003300140014003ULL; // might use this later
 const int MEMORY_HARDNESS = 1024 * 1024 * 5;
 uint64_t Salt(const string &password, const string &username)
 {
@@ -61,6 +62,18 @@ void bitwiseMixing(vector<uint64_t> &poly)
         poly[i] ^= (poly[i] << 17) | (poly[i] >> (64 - 17));
     }
 }
+void neighborBasedTransformation(vector<uint64_t> &poly)
+{
+    size_t n = poly.size();
+    for (size_t i = 0; i < n; i++)
+    {
+        uint64_t left = poly[(i + n - 1) % n];
+        uint64_t right = poly[(i + 1) % n];
+        poly[i] ^= (left >> 3) ^ (right << 5);
+        poly[i] *= PRIME2;
+        poly[i] ^= (poly[i] << 11) | (poly[i] >> (64 - 11));
+    }
+}
 
 string generateHash(const vector<uint64_t> &poly)
 {
@@ -78,6 +91,7 @@ string Hash(const string &password, const string &username)
     uint64_t salt = Salt(password, username);
     vector<uint64_t> poly = Lattice(password, salt);
     memoryHardening(poly, salt);
+    neighborBasedTransformation(poly);
     bitwiseMixing(poly);
     return generateHash(poly);
 }
