@@ -17,9 +17,9 @@ uint64_t Salt(const string &password, const string &username)
     for (char c : (password + username))
     {
         salt ^= static_cast<uint64_t>(c) * PRIME2;
-        salt = (salt << 7) | (salt >> (64 - 7)); // shifting
+        salt = (salt << 7) | (salt >> (64 - 7)); 
         salt *= PRIME1;
-        salt ^= (salt >> 17) | (salt << (64 - 17)); // more mixing
+        salt ^= (salt >> 17) | (salt << (64 - 17)); 
     }
     return salt;
 }
@@ -81,7 +81,7 @@ string generateHash(const vector<uint64_t> &poly)
     hashStream.fill('0');
     for (size_t i = 0; i < poly.size(); i++)
     {
-        hashStream << hex << setw(16) << poly[i]; // setw to ignore after 16, 0s if less
+        hashStream << hex << setw(16) << poly[i]; 
     }
     return hashStream.str();
 }
